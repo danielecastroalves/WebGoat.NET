@@ -1,13 +1,12 @@
-using log4net;
-using Mono.Data.Sqlite;
 using System;
 using System.Data;
-using System.IO;
+using Mono.Data.Sqlite;
+using log4net;
 using System.Reflection;
+using System.IO;
 using System.Diagnostics;
 using System.Threading;
-using System.Web;
-using Microsoft.Security.Application;
+using System.Data.SqlClient;
 
 namespace OWASP.WebGoat.NET.App_Code.DB
 {
@@ -184,15 +183,13 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             string output = null;
             try
             {
-            
                 using (SqliteConnection connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
 
-                    string customerNumberParameterName = "@customerNumber";
-                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumberParameterName;
+                    string sql = "select email from CustomerLogin where customerNumber = @customerNumber";
                     SqliteCommand command = new SqliteCommand(sql, connection);
-                    command.Parameters.AddWithValue(customerNumberParameterName, customerNumber);
+                    command.Parameters.AddWithValue("@customerNumber", customerNumber);
                     output = command.ExecuteScalar().ToString();
                 } 
             }
@@ -208,7 +205,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             string sql = "select Customers.customerNumber, Customers.customerName, Customers.logoFileName, Customers.contactLastName, Customers.contactFirstName, " +
                 "Customers.phone, Customers.addressLine1, Customers.addressLine2, Customers.city, Customers.state, Customers.postalCode, Customers.country, " +
                 "Customers.salesRepEmployeeNumber, Customers.creditLimit, CustomerLogin.email, CustomerLogin.password, CustomerLogin.question_id, CustomerLogin.answer " +
-                "From Customers, CustomerLogin where Customers.customerNumber = CustomerLogin.customerNumber and Customers.customerNumber = @customerNumber";
+                "From Customers, CustomerLogin where Customers.customerNumber = CustomerLogin.customerNumber and Customers.customerNumber = " + customerNumber;
 
             DataSet ds = new DataSet();
             try
@@ -219,7 +216,6 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                     connection.Open();
 
                     SqliteDataAdapter da = new SqliteDataAdapter(sql, connection);
-                    da.SelectCommand.Parameters.AddWithValue("@customerNumber", customerNumber);
                     da.Fill(ds);
                 }
 
@@ -318,7 +314,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
         public string[] GetSecurityQuestionAndAnswer(string email)
         {
             string sql = "select SecurityQuestions.question_text, CustomerLogin.answer from CustomerLogin, " + 
-                "SecurityQuestions where CustomerLogin.email = '@email' and CustomerLogin.question_id = " +
+                "SecurityQuestions where CustomerLogin.email = '" + email + "' and CustomerLogin.question_id = " +
                 "SecurityQuestions.question_id;";
                 
             string[] qAndA = new string[2];
@@ -328,7 +324,6 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 connection.Open();
 
                 SqliteDataAdapter da = new SqliteDataAdapter(sql, connection);
-                da.SelectCommand.Parameters.AddWithValue("@email", email);
                 
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -336,8 +331,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     DataRow row = ds.Tables[0].Rows[0];
-                    qAndA[0] = HttpUtility.HtmlEncode(row[0].ToString());
-                    qAndA[1] = HttpUtility.HtmlEncode(row[1].ToString());
+                    qAndA[0] = row[0].ToString();
+                    qAndA[1] = row[1].ToString();
                 }
             }
             
@@ -413,22 +408,32 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
         public DataSet GetProductDetails(string productCode)
         {
-            string sql = string.Empty;
             SqliteDataAdapter da;
             DataSet ds = new DataSet();
 
-
             using (SqliteConnection connection = new SqliteConnection(_connectionString))
             {
-                connection.Open();
+                using (SqliteCommand cmd = new SqliteCommand())
+                {
+                    cmd.CommandText = "select * from Products where productCode = @productCode";
+                    cmd.Parameters.AddWithValue("@productCode", productCode);
+                    cmd.Connection = connection;
+                    connection.Open();
+                    da = new SqliteDataAdapter(cmd);
+                    da.Fill(ds, "products");
+                    connection.Close();
+                }
 
-                sql = "select * from Products where productCode = '" + productCode + "'";
-                da = new SqliteDataAdapter(sql, connection);
-                da.Fill(ds, "products");
-
-                sql = "select * from Comments where productCode = '" + productCode + "'";
-                da = new SqliteDataAdapter(sql, connection);
-                da.Fill(ds, "comments");
+                using (SqliteCommand cmd = new SqliteCommand())
+                {
+                    cmd.CommandText = "select * from Comments where productCode = @productCode";
+                    cmd.Parameters.AddWithValue("@productCode", productCode);
+                    cmd.Connection = connection;
+                    connection.Open();
+                    da = new SqliteDataAdapter(cmd);
+                    da.Fill(ds, "comments");
+                    connection.Close();
+                }
 
                 DataRelation dr = new DataRelation("prod_comments",
                 ds.Tables["products"].Columns["productCode"], //category table
@@ -518,8 +523,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
                 //category / products relationship
                 DataRelation dr = new DataRelation("cat_prods", 
-                HttpUtility.HtmlEncode(ds.Tables["categories"].Columns["catNumber"]), //category table
-                HttpUtility.HtmlEncode(ds.Tables["products"].Columns["catNumber"]), //product table
+                ds.Tables["categories"].Columns["catNumber"], //category table
+                ds.Tables["products"].Columns["catNumber"], //product table
                 false);
 
                 ds.Relations.Add(dr);
@@ -557,10 +562,9 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 {
                     connection.Open();
 
-                    string sql = "select email from CustomerLogin where customerNumber = @customerNumber";
+                    string sql = "select email from CustomerLogin where customerNumber = " + num;
                     SqliteCommand cmd = new SqliteCommand(sql, connection);
-                    cmd.SelectCommand.Parameters.AddWithValue("@customerNumber", num);
-                    output = HttpUtility.HtmlEncode((string) cmd.ExecuteScalar());
+                    output = (string)cmd.ExecuteScalar();
                 }
                 
             }

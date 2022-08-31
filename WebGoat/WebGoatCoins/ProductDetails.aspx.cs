@@ -7,7 +7,6 @@ using System.Web.UI.WebControls;
 using System.Data;
 using OWASP.WebGoat.NET.App_Code.DB;
 using OWASP.WebGoat.NET.App_Code;
-using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET.WebGoatCoins
 {
@@ -66,7 +65,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                 output += "<hr/>" + prodRow["productDescription"].ToString() + "<br/>";
                 output += "</div>";
 
-                hiddenFieldProductID.Value = prodRow["productCode"].ToString();
+                hiddenFieldProductID.Value = HttpUtility.UrlEncode(prodRow["productCode"].ToString());
 
                 DataRow[] childrows = prodRow.GetChildRows("prod_comments");
                 if (childrows.Length > 0)
@@ -80,8 +79,8 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
 
             }
 
-            lblOutput.Text = Sanitizer.GetSafeHtmlFragment(output);
-            lblComments.Text = Sanitizer.GetSafeHtmlFragment(comments);
+            lblOutput.Text = output;
+            lblComments.Text = comments;
 
 
             //Fill in the email address of authenticated users

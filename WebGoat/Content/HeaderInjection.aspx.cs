@@ -23,7 +23,7 @@ namespace OWASP.WebGoat.NET
             else if (headerQuery != null)
             {
                 NameValueCollection newHeader = new NameValueCollection();
-                newHeader.Add("newHeader", headerQuery;
+                newHeader.Add("newHeader", headerQuery);
                 Response.Headers.Add(newHeader);
             }
 
