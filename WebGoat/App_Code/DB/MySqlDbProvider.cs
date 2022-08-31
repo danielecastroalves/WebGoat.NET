@@ -321,7 +321,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
         public string[] GetSecurityQuestionAndAnswer(string email)
         {
             string sql = "select SecurityQuestions.question_text, CustomerLogin.answer from CustomerLogin, " + 
-                "SecurityQuestions where CustomerLogin.email = '" + email + "' and CustomerLogin.question_id = " +
+                "SecurityQuestions where CustomerLogin.email = '@email' and CustomerLogin.question_id = " +
                 "SecurityQuestions.question_id;";
                 
             string[] qAndA = new string[2];
@@ -329,6 +329,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
+                da.SelectCommand.Parameters.AddWithValue("@email", email);
                 
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -336,8 +337,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     DataRow row = ds.Tables[0].Rows[0];
-                    qAndA[0] = row[0].ToString();
-                    qAndA[1] = row[1].ToString();
+                    qAndA[0] = HttpUtility.HtmlEncode(row[0].ToString());
+                    qAndA[1] = HttpUtility.HtmlEncode(row[1].ToString());
                 }
             }
             
@@ -505,8 +506,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
                 //category / products relationship
                 DataRelation dr = new DataRelation("cat_prods", 
-                ds.Tables["categories"].Columns["catNumber"], //category table
-                ds.Tables["products"].Columns["catNumber"], //product table
+                HttpUtility.HtmlEncode(ds.Tables["categories"].Columns["catNumber"]), //category table
+                HttpUtility.HtmlEncode(ds.Tables["products"].Columns["catNumber"]), //product table
                 false);
 
                 ds.Relations.Add(dr);

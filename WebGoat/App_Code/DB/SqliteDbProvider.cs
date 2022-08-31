@@ -518,8 +518,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
                 //category / products relationship
                 DataRelation dr = new DataRelation("cat_prods", 
-                ds.Tables["categories"].Columns["catNumber"], //category table
-                ds.Tables["products"].Columns["catNumber"], //product table
+                HttpUtility.HtmlEncode(ds.Tables["categories"].Columns["catNumber"]), //category table
+                HttpUtility.HtmlEncode(ds.Tables["products"].Columns["catNumber"]), //product table
                 false);
 
                 ds.Relations.Add(dr);
