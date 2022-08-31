@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.Security.Application;
 using OWASP.WebGoat.NET.App_Code;
 using OWASP.WebGoat.NET.App_Code.DB;
 
@@ -34,7 +35,7 @@ namespace OWASP.WebGoat.NET
                 
                 return;
             }    
-            labelQuestion.Text = "Here is the question we have on file for you: <strong>" + result[0] + "</strong>";
+            labelQuestion.Text = Sanitizer.GetSafeHtmlFragment("Here is the question we have on file for you: <strong>" + result[0] + "</strong>");
             PanelForgotPasswordStep2.Visible = true;
             PanelForgotPasswordStep3.Visible = false;
             

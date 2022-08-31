@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
+using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET
 {
@@ -30,7 +31,7 @@ namespace OWASP.WebGoat.NET
         	//}
         	//else
         	//{
-        		string filename = Request.QueryString["filename"];
+        		string filename = Encoder.UrlEncode(Request.QueryString["filename"]);
         		if(filename != null)
         		{
                     try

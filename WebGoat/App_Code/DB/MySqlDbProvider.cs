@@ -354,8 +354,9 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     //get data
-                    string sql = "select * from CustomerLogin where email = '" + email + "';";
+                    string sql = "select * from CustomerLogin where email = '@email';";
                     MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
+                    da.SelectCommand.Parameters.AddWithValue("@email", email);
                     DataSet ds = new DataSet();
                     da.Fill(ds);
 
@@ -365,7 +366,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                         result = "Email Address Not Found!";
                     }
 
-                    string encoded_password = ds.Tables[0].Rows[0]["Password"].ToString();
+                    string encoded_password = HttpUtility.UrlEncode(ds.Tables[0].Rows[0]["Password"].ToString());
                     string decoded_password = Encoder.Decode(encoded_password);
                     result = decoded_password;
                 }
@@ -538,8 +539,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             string output = "";
             try
             {
-            
-                output = (String)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = " + num);
+                var parameter = new MySqlParameter("@num", num);
+                output = (String)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = @num", parameter);
                 /*using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     string sql = "select email from CustomerLogin where customerNumber = " + num;

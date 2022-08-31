@@ -16,7 +16,7 @@
         });
  </script>
 
-    <h1 class="title-regular-4 clearfix">Details for <%=(Request["productNumber"] == null ? "This Month's Special" : "Product #" + Request["productNumber"].ToString()) %></h1>
+    <h1 class="title-regular-4 clearfix">Details for <%=(Server.UrlEncode(Request["productNumber"]) == null ? "This Month's Special" : "Product #" + Server.UrlEncode(Request["productNumber"])) %></h1>
         <div class="notice">
         <asp:Literal runat="server" EnableViewState="False" ID="labelMessage">
         Here are the details we have in our database for this item!
