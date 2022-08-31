@@ -263,16 +263,22 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
         public string AddComment(string productCode, string email, string comment)
         {
-            string sql = "insert into Comments(productCode, email, comment) values ('" + productCode + "','" + email + "','" + comment + "');";
+            string sql = "insert into Comments(productCode, email, comment) values (@productCode, @email, @comment);";
             string output = null;
-            
+
             try
             {
-
                 using (SqliteConnection connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
-                    SqliteCommand command = new SqliteCommand(sql, connection);
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+                    command.CommandText = sql;
+                    command.Prepare();
+                    command.Parameters.AddWithValue("@productCOde", productCode);
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@comment", comment);
+
                     command.ExecuteNonQuery();
                 }
             }
