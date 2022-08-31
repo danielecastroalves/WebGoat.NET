@@ -1,9 +1,9 @@
+using log4net;
+using Mono.Data.Sqlite;
 using System;
 using System.Data;
-using Mono.Data.Sqlite;
-using log4net;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
 using System.Web;
@@ -189,8 +189,10 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 {
                     connection.Open();
 
-                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumber;
+                    string customerNumberParameterName = "@customerNumber";
+                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumberParameterName;
                     SqliteCommand command = new SqliteCommand(sql, connection);
+                    command.Parameters.AddWithValue(customerNumberParameterName, customerNumber);
                     output = command.ExecuteScalar().ToString();
                 } 
             }
