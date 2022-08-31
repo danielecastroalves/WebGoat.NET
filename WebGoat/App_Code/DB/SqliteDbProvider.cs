@@ -6,6 +6,8 @@ using System.Reflection;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Web;
+using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET.App_Code.DB
 {
@@ -330,8 +332,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     DataRow row = ds.Tables[0].Rows[0];
-                    qAndA[0] = row[0].ToString();
-                    qAndA[1] = row[1].ToString();
+                    qAndA[0] = HttpUtility.HtmlEncode(row[0].ToString());
+                    qAndA[1] = HttpUtility.HtmlEncode(row[1].ToString());
                 }
             }
             

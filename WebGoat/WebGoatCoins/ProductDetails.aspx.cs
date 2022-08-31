@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using OWASP.WebGoat.NET.App_Code.DB;
 using OWASP.WebGoat.NET.App_Code;
+using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET.WebGoatCoins
 {
@@ -79,8 +80,8 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
 
             }
 
-            lblOutput.Text = output;
-            lblComments.Text = comments;
+            lblOutput.Text = Sanitizer.GetSafeHtmlFragment(output);
+            lblComments.Text = Sanitizer.GetSafeHtmlFragment(comments);
 
 
             //Fill in the email address of authenticated users
