@@ -30,7 +30,7 @@ namespace OWASP.WebGoat.NET
 
 
             //Headers
-            lblHeaders.Text = Request.Headers.ToString().Replace("&", "<br />");
+            lblHeaders.Text = Sanitizer.GetSafeHtmlFragment(Request.Headers.ToString().Replace("&", "<br />"));
 
             //Cookies
             ArrayList colCookies = new ArrayList();

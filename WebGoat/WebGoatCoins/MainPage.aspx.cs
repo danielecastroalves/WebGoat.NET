@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using System.IO;
 using OWASP.WebGoat.NET.App_Code.DB;
 using OWASP.WebGoat.NET.App_Code;
+using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET
 {
@@ -29,7 +30,7 @@ namespace OWASP.WebGoat.NET
                 DataSet ds = du.GetCustomerDetails(customerNumber);
                 DataRow row = ds.Tables[0].Rows[0]; //customer row
 
-                Image1.ImageUrl = "images/logos/" + row["logoFileName"];
+                Image1.ImageUrl = Server.UrlEncode("images/logos/" + row["logoFileName"]);
 
                 foreach (DataColumn col in ds.Tables[0].Columns)
                 {
@@ -39,7 +40,7 @@ namespace OWASP.WebGoat.NET
                     TableCell cell1 = new TableCell();
                     TableCell cell2 = new TableCell();
                     cell1.Text = col.ColumnName.ToString();
-                    cell2.Text = row[col].ToString();
+                    cell2.Text = Server.HtmlEncode(row[col].ToString());
                     
                     tablerow.Cells.Add(cell1);
                     tablerow.Cells.Add(cell2);

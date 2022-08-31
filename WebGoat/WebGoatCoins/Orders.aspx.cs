@@ -59,7 +59,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                     GridView1.DataBind();
                 }
                 //check if orderNumber exists
-                string orderNumber = Request["orderNumber"];
+                string orderNumber = Server.UrlEncode(Request["orderNumber"]);
                 if (orderNumber != null)
                 {
                     try
@@ -74,7 +74,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                         //allow customer to download image of their product
                         string image = dsOrderDetails.Tables[0].Rows[0]["productImage"].ToString();
                         HyperLink1.Text = "Download Product Image";
-                        HyperLink1.NavigateUrl = Request.RawUrl + "&image=images/products/" + image;
+                        HyperLink1.NavigateUrl = Server.UrlEncode(Request.RawUrl + "&image=images/products/" + image);
                     }
                     catch (Exception ex)
                     {
@@ -111,7 +111,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 HyperLink link = new HyperLink();
-                link.Text = e.Row.Cells[0].Text;
+                link.Text = Server.HtmlEncode(e.Row.Cells[0].Text);
                 link.NavigateUrl = "Orders.aspx?orderNumber=" + link.Text;
                 e.Row.Cells[0].Controls.Add(link);
             }
