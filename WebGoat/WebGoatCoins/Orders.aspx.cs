@@ -72,7 +72,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                         PanelShowDetailSuccess.Visible = true;
 
                         //allow customer to download image of their product
-                        string image = dsOrderDetails.Tables[0].Rows[0]["productImage"].ToString();
+                        string image = HttpUtility.UrlEncode(dsOrderDetails.Tables[0].Rows[0]["productImage"].ToString());
                         HyperLink1.Text = "Download Product Image";
                         HyperLink1.NavigateUrl = Request.RawUrl + "&image=images/products/" + image;
                     }
@@ -89,7 +89,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                 if (target_image != null)
                 {
                     FileInfo fi = new FileInfo(Server.MapPath(target_image));
-                    lblOutput.Text = fi.FullName;
+                    lblOutput.Text = HttpUtility.HtmlEncode(fi.FullName);
 
                     NameValueCollection imageExtensions = new NameValueCollection();
                     imageExtensions.Add(".jpg", "image/jpeg");
@@ -97,7 +97,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                     imageExtensions.Add(".png", "image/png");
 
                     Response.ContentType = imageExtensions.Get(fi.Extension);
-                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + fi.Name);
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + HttpUtility.HtmlEncode(fi.Name));
                     Response.TransmitFile(fi.FullName);
                     Response.End();
                 }

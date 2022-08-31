@@ -29,17 +29,17 @@ namespace OWASP.WebGoat.NET
                 DataSet ds = du.GetCustomerDetails(customerNumber);
                 DataRow row = ds.Tables[0].Rows[0]; //customer row
 
-                Image1.ImageUrl = "images/logos/" + row["logoFileName"];
+                Image1.ImageUrl = "images/logos/" + HttpUtility.UrlEncode(row["logoFileName"]);
 
                 foreach (DataColumn col in ds.Tables[0].Columns)
                 {
                     TableRow tablerow = new TableRow();
-                    tablerow.ID = col.ColumnName.ToString();
+                    tablerow.ID = HttpUtility.HtmlEncode(col.ColumnName.ToString());
 
                     TableCell cell1 = new TableCell();
                     TableCell cell2 = new TableCell();
-                    cell1.Text = col.ColumnName.ToString();
-                    cell2.Text = row[col].ToString();
+                    cell1.Text = HttpUtility.HtmlEncode(col.ColumnName.ToString());
+                    cell2.Text = HttpUtility.HtmlEncode(row[col].ToString());
                     
                     tablerow.Cells.Add(cell1);
                     tablerow.Cells.Add(cell2);
