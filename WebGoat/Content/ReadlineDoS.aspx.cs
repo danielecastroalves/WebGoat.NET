@@ -20,7 +20,7 @@ namespace OWASP.WebGoat.NET
             {
                 while (!reader.EndOfStream)
                 {
-                    lblFileContent.Text += reader.ReadLine() + "<br />";
+                    lblFileContent.Text += HttpUtility.HtmlEncode(reader.ReadLine()) + "<br />";
                 }
             }
         }

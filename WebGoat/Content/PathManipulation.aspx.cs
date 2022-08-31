@@ -21,8 +21,8 @@ namespace OWASP.WebGoat.NET
 	        	{
 	            	HyperLink HL = new HyperLink();
 	            	HL.ID = "HyperLink" + i++;
-	            	HL.Text = fi.Name;
-	            	HL.NavigateUrl = Request.FilePath + "?filename="+fi.Name;
+	            	HL.Text = HttpUtility.HtmlEncode(fi.Name);
+	            	HL.NavigateUrl = Request.FilePath + "?filename=" + HL.Text;
 	            	ContentPlaceHolder cph = (ContentPlaceHolder)this.Master.FindControl("BodyContentPlaceholder");
 	            	cph.Controls.Add(HL);
 	            	cph.Controls.Add(new LiteralControl("<br/>"));
@@ -85,7 +85,7 @@ namespace OWASP.WebGoat.NET
 	                {
 	                    if (_Response.IsClientConnected)
 	                    {
-	                        _Response.BinaryWrite(br.ReadBytes(pack));
+	                        _Response.BinaryWrite(HttpUtility.HtmlEncode(br.ReadBytes(pack)));
 	                    }
 	                    else
 	                    {

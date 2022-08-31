@@ -1,11 +1,8 @@
+using log4net;
+using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using MySql.Data.MySqlClient;
-using log4net;
 using System.Reflection;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
 
 namespace OWASP.WebGoat.NET.App_Code.DB
 {
@@ -203,8 +200,10 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumber;
+                    string customerNumberParameterName = "@customerNumber";
+                    string sql = $"select email from CustomerLogin where customerNumber = {customerNumberParameterName}";
                     MySqlCommand command = new MySqlCommand(sql, connection);
+                    command.Parameters.AddWithValue(customerNumberParameterName, customerNumber);
                     output = command.ExecuteScalar().ToString();
                 } 
             }
