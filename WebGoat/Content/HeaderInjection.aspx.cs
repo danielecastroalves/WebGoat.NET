@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections;
 using System.Collections.Specialized;
+using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET
 {
@@ -13,17 +14,20 @@ namespace OWASP.WebGoat.NET
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["Cookie"] != null)
+            var cookieQuery = Encoder.UrlEncode(Request.QueryString["Cookie"]);
+            var headerQuery = Encoder.UrlEncode(Request.QueryString["Header"]);
+
+            if (cookieQuery != null)
             {
                 HttpCookie cookie = new HttpCookie("UserAddedCookie");
-                cookie.Value = Request.QueryString["Cookie"];
+                cookie.Value = cookieQuery;
 
                 Response.Cookies.Add(cookie);
             }
-            else if (Request.QueryString["Header"] != null)
+            else if (headerQuery != null)
             {
                 NameValueCollection newHeader = new NameValueCollection();
-                newHeader.Add("newHeader", Request.QueryString["Header"]);
+                newHeader.Add("newHeader", headerQuery);
                 Response.Headers.Add(newHeader);
             }
 

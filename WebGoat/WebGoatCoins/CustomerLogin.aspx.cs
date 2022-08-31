@@ -30,8 +30,8 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
 
         protected void ButtonLogOn_Click(object sender, EventArgs e)
         {
-            string email = txtUserName.Text;
-            string pwd = txtPassword.Text;
+            string email = Microsoft.Security.Application.Encoder.HtmlEncode(txtUserName.Text);
+            string pwd = Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text);
 
             log.Info("User " + email + " attempted to log in with password " + pwd);
 
