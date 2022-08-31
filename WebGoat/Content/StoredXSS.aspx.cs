@@ -46,11 +46,11 @@ namespace OWASP.WebGoat.NET
             string comments = string.Empty;
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-                comments += "<strong>Email:</strong>" + Server.HtmlEncode(row["email"].ToString()) + "<span style='font-size: x-small;color: #E47911;'> (Email Address Verified!) </span><br/>";
-                comments += "<strong>Comment:</strong><br/>" + Server.HtmlEncode(row["comment"].ToString()) + "<br/><hr/>";
+                comments += "<strong>Email:</strong>" + row["email"] + "<span style='font-size: x-small;color: #E47911;'> (Email Address Verified!) </span><br/>";
+                comments += "<strong>Comment:</strong><br/>" + row["comment"] + "<br/><hr/>";
 
             }
-            lblComments.Text = comments;
+            lblComments.Text = Sanitizer.GetSafeHtmlFragment(comments);
         }
 
         void FixedLoadComments()

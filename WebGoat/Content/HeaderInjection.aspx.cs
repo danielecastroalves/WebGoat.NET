@@ -16,14 +16,14 @@ namespace OWASP.WebGoat.NET
             if (cookieQuery != null)
             {
                 HttpCookie cookie = new HttpCookie("UserAddedCookie");
-                cookie.Value = Request.QueryString["Cookie"];
+                cookie.Value = cookieQuery;
 
                 Response.Cookies.Add(cookie);
             }
             else if (headerQuery != null)
             {
                 NameValueCollection newHeader = new NameValueCollection();
-                newHeader.Add("newHeader", Request.QueryString["Header"]);
+                newHeader.Add("newHeader", headerQuery;
                 Response.Headers.Add(newHeader);
             }
 
