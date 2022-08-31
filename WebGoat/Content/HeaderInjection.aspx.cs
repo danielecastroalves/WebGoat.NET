@@ -1,12 +1,7 @@
+using Microsoft.Security.Application;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Collections;
 using System.Collections.Specialized;
-using Microsoft.Security.Application;
 
 namespace OWASP.WebGoat.NET
 {
@@ -20,14 +15,14 @@ namespace OWASP.WebGoat.NET
             if (cookieQuery != null)
             {
                 HttpCookie cookie = new HttpCookie("UserAddedCookie");
-                cookie.Value = cookieQuery;
+                cookie.Value = Request.QueryString["Cookie"];
 
-                Response.Cookies.Add(cookie);
+                Response.Cookies.Add(httpCookie);
             }
             else if (headerQuery != null)
             {
                 NameValueCollection newHeader = new NameValueCollection();
-                newHeader.Add("newHeader", headerQuery);
+                newHeader.Add("newHeader", Request.QueryString["Header"]);
                 Response.Headers.Add(newHeader);
             }
 
