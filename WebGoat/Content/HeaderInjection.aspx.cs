@@ -2,6 +2,7 @@ using Microsoft.Security.Application;
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Web;
 
 namespace OWASP.WebGoat.NET
 {
@@ -17,7 +18,7 @@ namespace OWASP.WebGoat.NET
                 HttpCookie cookie = new HttpCookie("UserAddedCookie");
                 cookie.Value = Request.QueryString["Cookie"];
 
-                Response.Cookies.Add(httpCookie);
+                Response.Cookies.Add(cookie);
             }
             else if (headerQuery != null)
             {
