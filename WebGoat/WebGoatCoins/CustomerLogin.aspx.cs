@@ -1,14 +1,11 @@
-﻿using System;
-using System.Web.Security;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using OWASP.WebGoat.NET.App_Code.DB;
+﻿using log4net;
 using OWASP.WebGoat.NET.App_Code;
-using log4net;
+using OWASP.WebGoat.NET.App_Code.DB;
+using System;
 using System.Reflection;
+using System.Web;
+using System.Web.Security;
+using Encoder = Microsoft.Security.Application.Encoder;
 
 namespace OWASP.WebGoat.NET.WebGoatCoins
 {
@@ -30,8 +27,8 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
 
         protected void ButtonLogOn_Click(object sender, EventArgs e)
         {
-            string email = Microsoft.Security.Application.Encoder.HtmlEncode(txtUserName.Text);
-            string pwd = Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text);
+            string email = Encoder.HtmlEncode(txtUserName.Text);
+            string pwd = Encoder.HtmlEncode(txtPassword.Text);
 
             log.Info("User " + email + " attempted to log in with password " + pwd);
 
