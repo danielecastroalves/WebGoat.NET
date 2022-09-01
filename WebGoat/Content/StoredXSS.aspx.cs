@@ -33,9 +33,9 @@ namespace OWASP.WebGoat.NET
                 lblMessage.Visible = true;
                 LoadComments();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                lblMessage.Text = ex.Message;
+                lblMessage.Text = "Operation Failed";
                 lblMessage.Visible = true;
             }
 		}

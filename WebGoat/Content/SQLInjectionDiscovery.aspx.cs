@@ -27,11 +27,11 @@ namespace OWASP.WebGoat.NET
                 string name = Server.HtmlEncode(txtID.Text.Substring(0, 3));
                 string output = du.GetEmailByCustomerNumber(name);
 
-                lblOutput.Text = String.IsNullOrEmpty(output) ? "Customer Number does not exist" : output;
+                lblOutput.Text = string.IsNullOrEmpty(output) ? "Customer Number does not exist" : Server.HtmlEncode(output);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                lblOutput.Text = ex.Message;
+                lblOutput.Text = "Operation Failed";
             }
 		}
 	}

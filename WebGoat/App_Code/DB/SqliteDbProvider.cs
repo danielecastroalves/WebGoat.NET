@@ -305,7 +305,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             catch (SqliteException ex)
             {
                 log.Error("Error adding comment", ex);
-                output = ex.Message;
+                output = "Error adding comment";
             }
 
             return output;
@@ -325,7 +325,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                     command.CommandText = sql;
                     command.Prepare();
                     command.Parameters.AddWithValue("@productCOde", Encoder.Encode(password));
-                    command.Parameters.AddWithValue("@costumerNumber", customerNumber);    
+                    command.Parameters.AddWithValue("@costumerNumber", customerNumber);
 
                     int rows_added = command.ExecuteNonQuery();
 
@@ -403,7 +403,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             }
             catch (SqliteException ex)
             {
-                result = ex.Message;
+                result = "Operation Failed";
             }
 
             return result;
@@ -667,7 +667,6 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             catch (SqliteException ex)
             {
                 log.Error("Error getting email by customer number", ex);
-                output = ex.Message;
             }
 
             return output;

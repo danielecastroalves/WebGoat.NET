@@ -26,9 +26,9 @@ namespace OWASP.WebGoat.NET
                     labelUpload.Text = "<div class='success' style='text-align:center'>The file " + Server.HtmlEncode(FileUpload1.FileName) + " has been saved in to the WebGoatCoins/uploads directory</div>";
                     
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    labelUpload.Text = "<div class='error' style='text-align:center'>Upload Failed: " + ex.Message + "</div>";
+                    labelUpload.Text = "<div class='error' style='text-align:center'>Upload Failed</div>";
                 }
                 finally
                 {

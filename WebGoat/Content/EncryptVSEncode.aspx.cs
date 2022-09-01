@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Security.Cryptography;
 using System.Drawing;
 using System.Text;
+using Encoder = Microsoft.Security.Application.Encoder;
 
 namespace OWASP.WebGoat.NET
 {
@@ -24,7 +25,7 @@ namespace OWASP.WebGoat.NET
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Password = Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text);
+            Password = Encoder.HtmlEncode(txtPassword.Text);
         }
 
         protected void btnGO_Click(object sender, EventArgs e)
@@ -34,9 +35,9 @@ namespace OWASP.WebGoat.NET
             //sha1
             //encryption with password
             
-            string secret = Microsoft.Security.Application.Encoder.HtmlEncode(txtString.Text);
-            string key = string.IsNullOrEmpty(Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text)) ?
-                hardCodedKey : Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text);
+            string secret = Encoder.HtmlEncode(txtString.Text);
+            string key = string.IsNullOrEmpty(Encoder.HtmlEncode(txtPassword.Text)) ?
+                hardCodedKey : Encoder.HtmlEncode(txtPassword.Text);
             
             Table t = new Table();
             t.Width = new Unit("100%");
