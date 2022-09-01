@@ -54,14 +54,11 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
         protected void ButtonRecoverPassword_Click(object sender, EventArgs e)
         {
             try
-            {
-                //get the security question answer from the cookie
-                string encrypted_password = Request.Cookies["encr_sec_qu_ans"].Value.ToString();
-                
+            {                
                 //decode it (twice for extra security!)
-                string security_answer = Encoder.Decode(Encoder.Decode(encrypted_password));
+                string security_answer = Encoder.Decode(Encoder.Decode(Request.Cookies["encr_sec_qu_ans"].Value));
                 
-                if (security_answer.Trim().ToLower().Equals(txtAnswer.Text.Trim().ToLower()))
+                if (security_answer.Trim().Equals(txtAnswer.Text.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
                     PanelForgotPasswordStep1.Visible = false;
                     PanelForgotPasswordStep2.Visible = false;
@@ -82,8 +79,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
 
         string getPassword(string email)
         {
-            string password = du.GetPasswordByEmail(email);
-            return password;
+            return du.GetPasswordByEmail(email);
         }
 
     }

@@ -18,11 +18,8 @@ namespace OWASP.WebGoat.NET
         protected void btnCreate_Click(object sender, EventArgs e)
         {
             string userName = txtUsername.Text;
-            string password = txtPassword.Text;
 
-            Regex testPassword = new Regex(userName);
-            Match match = testPassword.Match(password);
-            if (match.Success)
+            if (userName.Contains(txtPassword.Text))
             {
                 lblError.Text = "Do not include name in password.";
             }

@@ -6,6 +6,7 @@ using System;
 using System.Data;
 using System.Reflection;
 using System.Web;
+using System.Web.Helpers;
 
 namespace OWASP.WebGoat.NET.App_Code.DB
 {
@@ -59,14 +60,14 @@ namespace OWASP.WebGoat.NET.App_Code.DB
         {
             try
             {
-                /*using (MySqlConnection connection = new MySqlConnection(_connectionString))
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
+                    string sql = "select * from information_schema.TABLES";
                     connection.Open();
-                    MySqlCommand cmd = new MySqlCommand("select * from information_schema.TABLES", connection);
+                    MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.ExecuteNonQuery();
                     connection.Close();
-                }*/
-                MySqlHelper.ExecuteNonQuery(_connectionString, "select * from information_schema.TABLES");
+                }
 
                 return true;
             }
@@ -119,20 +120,17 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
         public bool IsValidCustomerLogin(string email, string password)
         {
-            //encode password
-            string encoded_password = Encoder.Encode(password);
 
             //check email/password
             string sql = "select * from CustomerLogin where email = '@email' and password = '@senha';";
 
             try
             {
-
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     var command = new MySqlCommand(sql, connection);
                     command.Parameters.AddWithValue("@email", email);
-                    command.Parameters.AddWithValue("@senha", encoded_password);
+                    command.Parameters.AddWithValue("@senha", Encoder.Encode(password));
 
                     MySqlDataAdapter da = new MySqlDataAdapter(command);
 
@@ -175,10 +173,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                         return error_message;
                     }
 
-                    string encoded_password = ds.Tables[0].Rows[0]["Password"].ToString();
-                    string decoded_password = Encoder.Decode(encoded_password);
-
-                    if (password.Trim().ToLower() != decoded_password.Trim().ToLower())
+                    if (!string.Equals(password.Trim(), Encoder.Decode(ds.Tables[0].Rows[0]["Password"].ToString()).Trim(), StringComparison.OrdinalIgnoreCase))
                     {
                         error_message = "Password Not Valid For This Email Address!";
                     }
@@ -327,15 +322,19 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
         public string UpdateCustomerPassword(int customerNumber, string password)
         {
-            string sql = "update CustomerLogin set password = '" + Encoder.Encode(password) + "' where customerNumber = " + customerNumber;
+            string sql = "update CustomerLogin set password = '@productCOde' where customerNumber = @costumerNumber";
             string output = null;
             try
             {
-
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    MySqlCommand command = new MySqlCommand(sql, connection);
-
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand();
+                    command.Connection = connection;
+                    command.CommandText = sql;
+                    command.Prepare();
+                    command.Parameters.AddWithValue("@productCOde", Encoder.Encode(password));
+                    command.Parameters.AddWithValue("@costumerNumber", customerNumber);
                     int rows_added = command.ExecuteNonQuery();
 
                     log.Info("Rows Added: " + rows_added + " to comment table");
@@ -405,8 +404,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                         result = "Email Address Not Found!";
                     }
 
-                    string encoded_password = HttpUtility.UrlEncode(ds.Tables[0].Rows[0]["Password"].ToString());
-                    result = Encoder.Decode(encoded_password);
+                    result = Encoder.Decode(HttpUtility.UrlEncode(ds.Tables[0].Rows[0]["Password"].ToString()));
                 }
             }
             catch (Exception ex)
@@ -629,15 +627,9 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             string output = "";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(_connectionString))
-                {
-                    string sql = "select email from CustomerLogin where customerNumber = @num";
+                var parameter = new MySqlParameter("@num", num);
+                output = (string)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = @num", parameter);
 
-                    MySqlCommand cmd = new MySqlCommand(sql, connection);
-                    cmd.Parameters.AddWithValue("@num", num);
-
-                    output = (string)cmd.ExecuteScalar();
-                }
             }
             catch (SqliteException ex)
             {

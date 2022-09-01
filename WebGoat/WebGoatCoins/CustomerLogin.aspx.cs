@@ -27,12 +27,11 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
 
         protected void ButtonLogOn_Click(object sender, EventArgs e)
         {
-            string email = Encoder.HtmlEncode(txtUserName.Text);
-            string pwd = Encoder.HtmlEncode(txtPassword.Text);
+            string email = Encoder.HtmlEncode(txtUserName.Text);            
 
-            log.Info("User " + email + " attempted to log in with password " + pwd);
+            log.Info("User " + email + " attempted to log in with password " + Encoder.HtmlEncode(txtPassword.Text));
 
-            if (!du.IsValidCustomerLogin(email, pwd))
+            if (!du.IsValidCustomerLogin(email, Encoder.HtmlEncode(txtPassword.Text)))
             {
                 labelError.Text = "Incorrect username/password"; 
                 PanelError.Visible = true;

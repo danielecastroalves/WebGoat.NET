@@ -35,8 +35,8 @@ namespace OWASP.WebGoat.NET
             //encryption with password
             
             string secret = Microsoft.Security.Application.Encoder.HtmlEncode(txtString.Text);
-            string password = Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text);
-            string key = String.IsNullOrEmpty(password) ? hardCodedKey : password;
+            string key = string.IsNullOrEmpty(Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text)) ?
+                hardCodedKey : Microsoft.Security.Application.Encoder.HtmlEncode(txtPassword.Text);
             
             Table t = new Table();
             t.Width = new Unit("100%");
