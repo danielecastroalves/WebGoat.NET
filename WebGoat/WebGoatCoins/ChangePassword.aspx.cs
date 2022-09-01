@@ -29,8 +29,8 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                     customerNumber = Request.Cookies["customerNumber"].Value;
                 }
 
-                string output = du.UpdateCustomerPassword(int.Parse(customerNumber), txtPassword1.Text);
-                labelMessage.Text = output;
+                du.UpdateCustomerPassword(int.Parse(customerNumber), txtPassword1.Text);
+                labelMessage.Text = "Password was updated";
             }
             else
             {

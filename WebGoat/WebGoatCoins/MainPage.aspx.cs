@@ -30,7 +30,7 @@ namespace OWASP.WebGoat.NET
                 DataSet ds = du.GetCustomerDetails(customerNumber);
                 DataRow row = ds.Tables[0].Rows[0]; //customer row
 
-                Image1.ImageUrl = "images/logos/" + HttpUtility.UrlEncode(row["logoFileName"]);
+                Image1.ImageUrl = "images/logos/" + HttpUtility.UrlEncode((string)row["logoFileName"]);
 
                 foreach (DataColumn col in ds.Tables[0].Columns)
                 {
@@ -62,7 +62,7 @@ namespace OWASP.WebGoat.NET
                 }
                 catch (Exception ex)
                 {
-                    labelUpload.Text = "Upload Failed: " + ex.Message;
+                    labelUpload.Text = "Upload Failed. See logs for details.";
                 }
                 finally
                 {

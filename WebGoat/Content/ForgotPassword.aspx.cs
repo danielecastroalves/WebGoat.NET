@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using Microsoft.Security.Application;
 using OWASP.WebGoat.NET.App_Code;
 using OWASP.WebGoat.NET.App_Code.DB;
+using Encoder = OWASP.WebGoat.NET.App_Code.Encoder;
 
 namespace OWASP.WebGoat.NET
 {

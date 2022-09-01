@@ -80,7 +80,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                     {
                         //litOrderDetails.Text = "Error finding order number " + orderNumber + ". Details: " + ex.Message;
                         PanelShowDetailFailure.Visible = true;
-                        litErrorDetailMessage.Text = "Error finding order number " + orderNumber + ". Details: " + ex.Message;
+                        litErrorDetailMessage.Text = "Error finding order number " + orderNumber + ". See logs for details";
                     }
                 }
 

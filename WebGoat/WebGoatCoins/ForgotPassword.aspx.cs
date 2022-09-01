@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using Microsoft.Security.Application;
 using OWASP.WebGoat.NET.App_Code;
 using OWASP.WebGoat.NET.App_Code.DB;
+using Encoder = OWASP.WebGoat.NET.App_Code.Encoder;
 
 namespace OWASP.WebGoat.NET.WebGoatCoins
 {
@@ -65,12 +66,12 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
                     PanelForgotPasswordStep1.Visible = false;
                     PanelForgotPasswordStep2.Visible = false;
                     PanelForgotPasswordStep3.Visible = true;
-                    labelPassword.Text = "Security Question Challenge Successfully Completed! <br/>Your password is: " + getPassword(txtEmail.Text);
+                    labelPassword.Text = "Security Question Challenge Successfully Completed!";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                labelMessage.Text = "An unknown error occurred - Do you have cookies turned on? Further Details: " + ex.Message;
+                labelMessage.Text = "An unknown error occurred - Do you have cookies turned on? See logs for Further Details";
             }
         }
 
